@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>İmmünoloji Mini Deneme</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+font-family:Arial, sans-serif;
+background:#111;
+color:#fff;
+padding:20px;
+}
+
+button{
+padding:12px;
+font-size:16px;
+margin:10px 0;
+width:100%;
+cursor:pointer;
+}
+
+.option{
+border:1px solid #555;
+padding:10px;
+margin:6px 0;
+cursor:pointer;
+}
+
+.correct{background:green}
+.wrong{background:red}
+</style>
+</head>
+
+<body>
+
+<div id="start">
+<h2>İmmünoloji 2. Mini Deneme</h2>
+<p>Seni çok seviyorum ❤️</p>
+<button onclick="startExam()">Sınavı Başlat</button>
+</div>
+
+<div id="exam" style="display:none">
+<p id="timer"></p>
+<p id="score"></p>
+<h3 id="question"></h3>
+<div id="options"></div>
+</div>
+
+<div id="end" style="display:none">
+<h2>Sınav Bitti 🎉</h2>
+<p id="final"></p>
+</div>
+
+<script>
+const questions = [
+ {q:"Antijen nedir?", o:["Yabancı madde","Antikor","Hormon","Lenf"], a:0},
+ {q:"Humoral bağışıklık?", o:["T hücre","B hücre","NK","Makrofaj"], a:1},
+ {q:"T hücreleri nerede olgunlaşır?", o:["Dalak","Kemik iliği","Timus","Lenf"], a:2},
+ {q:"Doğal bağışıklık?", o:["Özgül","Doğuştan","Aşı","Geç"], a:1},
+ {q:"Antikor üreten hücre?", o:["Makrofaj","Plazma","T","NK"], a:1},
+ {q:"NK hücresi görevi?", o:["Antikor","Virüslü hücre","Fagositoz","Aşı"], a:1},
+ {q:"Pasif doğal bağışıklık?", o:["Aşı","Hastalık","Anne sütü","Serum"], a:2},
+ {q:"Fagositoz yapan?", o:["Eritrosit","Nötrofil","B","Plazma"], a:1},
+ {q:"ABO antijeni nerede?", o:["Plazma","Eritrosit","Lenf","Serum"], a:1},
+ {q:"Sekonder lenfoid organ?", o:["Timus","Kemik iliği","Dalak","Hepsi"], a:2},
+
+ {q:"Canlı aşı?", o:["Zayıf","Tek doz","Adjuvan","Kısa"], a:1},
+ {q:"İnaktif aşı?", o:["Canlı","Tek doz","Adjuvan yok","Çok doz"], a:3},
+ {q:"Eozinofil neye karşı?", o:["Bakteri","Virüs","Parazit","Mantar"], a:2},
+ {q:"Lenf düğümü görevi?", o:["Kan","Filtre","Hormon","Yıkım"], a:1},
+ {q:"Antijen bağlanan kısım?", o:["Epitop","Paratop","Adjuvan","Hapten"], a:0},
+ {q:"B hücre olgunlaşma?", o:["Timus","Kemik iliği","Dalak","Lenf"], a:1},
+ {q:"Hücresel bağışıklık?", o:["B","T","Antikor","Plazma"], a:1},
+ {q:"NK kısaltması?", o:["PMN","NK","B","T"], a:1},
+ {q:"Antikor özgüllüğü?", o:["Epitop","Adjuvan","Plazma","Hormon"], a:0},
+ {q:"Bağışıklık hafızası?", o:["Doğal","Kazanılmış","Pasif","İnaktif"], a:1}
+];
+
+let i=0, score=0, time=1200, timer;
+
+function startExam(){
+document.getElementById("start").style.display="none";
+document.getElementById("exam").style.display="block";
+timer=setInterval(tick,1000);
+show();
+}
+
+function tick(){
+document.getElementById("timer").innerText="⏱ "+Math.floor(time/60)+":"+String(time%60).padStart(2,"0");
+time--;
+if(time<0) finish();
+}
+
+function show(){
+if(i>=questions.length){finish();return;}
+let q=questions[i];
+document.getElementById("question").innerText=(i+1)+". "+q.q;
+document.getElementById("score").innerText="Puan: "+score;
+let o=document.getElementById("options");
+o.innerHTML="";
+q.o.forEach((t,idx)=>{
+let d=document.createElement("div");
+d.className="option";
+d.innerText=t;
+d.onclick=()=>answer(d,idx);
+o.appendChild(d);
+});
+}
+
+function answer(el,idx){
+let q=questions[i];
+document.querySelectorAll(".option").forEach(x=>x.onclick=null);
+if(idx===q.a){el.classList.add("correct");score+=5;}
+else{
+el.classList.add("wrong");
+document.querySelectorAll(".option")[q.a].classList.add("correct");
+}
+setTimeout(()=>{i++;show();},700);
+}
+
+function finish(){
+clearInterval(timer);
+document.getElementById("exam").style.display="none";
+document.getElementById("end").style.display="block";
+document.getElementById("final").innerText="Skorun: "+score+" / 100 💖";
+}
+</script>
+
+</body>
+</html>
